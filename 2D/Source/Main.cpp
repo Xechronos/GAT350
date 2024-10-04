@@ -31,10 +31,12 @@ int main(int argc, char* argv[])
         //SDL_SetRenderDrawColor(renderer.m_renderer, 0, 0, 0, 0);
         //SDL_RenderClear(renderer.m_renderer);
 
-        framebuffer.Clear({ 255,0,0,255 });
+        framebuffer.Clear({ 255,255,255,255 });
         for (int i = 0; i < 100; i++) {
-            int x = rand() % 400;
-            int y = rand() % 300;
+            int x = rand() % framebuffer.m_width;
+            int y = rand() % framebuffer.m_height;
+            int x2 = rand() % framebuffer.m_width;
+            int y2 = rand() % framebuffer.m_height;
             framebuffer.DrawPoint(x, y, { 255,255,255,255 });
         }
 
