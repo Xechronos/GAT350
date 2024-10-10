@@ -1,5 +1,7 @@
 #include "FrameBuffer.h"
 #include "Renderer.h"
+#include "Image.h"
+#include "MathUtils.h"
 #include <iostream>
 
 Framebuffer::Framebuffer(const Renderer& renderer, int width, int height)
@@ -82,8 +84,6 @@ void Framebuffer::DrawLine(int x1, int y1, int x2, int y2, const color_t& color)
 	}
 }
 
-
-
 void Framebuffer::DrawLineSlope(int x1, int y1, int x2, int y2, const color_t& color)
 {
 	int dx = x2 - x1;
@@ -118,5 +118,36 @@ void Framebuffer::DrawTriangle(int x1, int x2, int x3, int y1, int y2, int y3, c
 	DrawLine(x1, y1, x2, y2, color);
 	DrawLine(x2, y2, x3, y3, color);
 	DrawLine(x3, y3, x1, y1, color);
+}
+
+void Framebuffer::DrawImage(int x, int y, const Image& image)
+{
+	// check if off-screen
+	if (x + image.m_width < 0 || x >= m_width || y + image.m_height < 0 || y >= m_height) return;
+
+	// iterate through image y
+	for (int iy = 0; iy < image.m_height; iy++)
+	{
+		// set screen y 
+		int sy = y + iy;
+		// check if off-screen, don't draw if off-screen
+		if (sy < 0 || sy >= m_height) continue;
+
+		// iterate through image x
+		for (int ix = 0; ix < image.m_width; ix++)
+		{
+			// set screen x
+			int sx = x + ix;
+			// check if off-screen, don't draw if off-screen
+			if (sx < 0 || sx >= m_width) continue;
+
+			// get image pixel color
+			color_t color = image.m_buffer[ix + (iy * image.m_width)];
+			// check alpha, if 0 don't draw
+			if (color.a) continue;
+			// set buffer to color
+			m_buffer[sx + sy * m_width] = color;
+		}
+	}
 }
 

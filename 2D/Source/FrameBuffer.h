@@ -19,6 +19,8 @@ public:
 	void DrawLineSlope(int x1, int y1, int x2, int y2, const color_t& color);
 	void DrawTriangle(int x1, int x2, int x3, int y1, int y2, int y3, const color_t& color);
 
+	void DrawImage(int x, int y, const class Image& image);
+
 public:
 	int m_width{ 0 };
 	int m_height{ 0 };

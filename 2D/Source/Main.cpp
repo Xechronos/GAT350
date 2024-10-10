@@ -1,5 +1,7 @@
 #include "Renderer.h"
 #include "FrameBuffer.h"
+#include "Image.h"
+#include "PostProcess.h"
 #include <iostream>
 #include <SDL.h>
 
@@ -10,6 +12,8 @@ int main(int argc, char* argv[])
     renderer.CreateWindow("2D", 800, 600);
 
     Framebuffer framebuffer(renderer, 400, 300);
+    Image image;
+    image.Load("hydra logo.png");
 
     bool quit = false;
 
@@ -40,7 +44,8 @@ int main(int argc, char* argv[])
             framebuffer.DrawPoint(x, y, { 255,255,255,255 });
         }
 
-        framebuffer.DrawRect(10, 10, 100, 150, {255,0,0,255});
+        framebuffer.DrawImage(100, 100, image);
+        //PostProcess::Invert(framebuffer.m_buffer);
         framebuffer.Update();
 
         renderer.CopyFrameBuffer(framebuffer);
