@@ -31,9 +31,7 @@
     <ClCompile Include="Source\Camera.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Actor.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\Actor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\FrameBuffer.h">
