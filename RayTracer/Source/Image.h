@@ -1,6 +1,6 @@
 #pragma once
-#include "FrameBuffer.h"
-#include <iostream>
+#include "Framebuffer.h"
+#include <string>
 #include <vector>
 
 class Image
