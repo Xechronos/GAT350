@@ -49,6 +49,7 @@
     <ClCompile Include="Source\Tracer.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\FrameBuffer.h">
@@ -109,6 +110,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneObject.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Triangle.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

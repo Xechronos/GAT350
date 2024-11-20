@@ -14,13 +14,14 @@ public:
 
 	void Tick();
 	void Reset() { m_startTime = clock::now(); }
+	float GetElapsedTime();
 
 	float GetTime() const { return m_time; }
-	float GetDeltaTime() const { return m_deltaTime; }
+	float GetDeltatime() const { return m_deltatime; }
 
 private:
 	float m_time{ 0 };
-	float m_deltaTime{ 0 };
+	float m_deltatime{ 0 };
 
 	clock::time_point m_startTime;
 	clock::time_point m_frameTime;

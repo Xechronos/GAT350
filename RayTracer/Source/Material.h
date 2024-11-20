@@ -10,6 +10,7 @@ public:
 	virtual bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, color3_t& attenuation, ray_t& scatter) = 0;
 
 	color3_t& GetColor() { return m_albedo; }
+	virtual color3_t GetEmissive() const { return color3_t{ 0 }; }
 
 protected:
 	color3_t m_albedo;
@@ -34,4 +35,24 @@ protected:
 	float m_fuzz = 0;
 };
 
-//memeber function declared with "override" does not override a base class member 
+class Dielectric : public Material
+{
+public:
+	Dielectric(const glm::vec3& albedo, float refactiveIndex) : Material{ albedo }, m_refractive{ refactiveIndex } {}
+	virtual bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, color3_t& attenuation, ray_t& scattered) override;
+
+protected:
+	float m_refractive = 0;
+};
+
+class Emissive : public Material
+{
+public:
+	Emissive(const color3_t& albedo, float intensity = 1) : Material{ albedo }, m_intensity{ intensity } {}
+
+	virtual	bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, color3_t& color, ray_t& scattered) override { return false; }
+	color3_t GetEmissive() const override { return m_albedo * m_intensity; }
+
+private:
+	float m_intensity{ 1 };
+};

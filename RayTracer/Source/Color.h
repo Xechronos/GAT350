@@ -1,5 +1,7 @@
 #pragma once
 #include "MathUtils.h"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/color_space.hpp>
 #include <algorithm>
 #include <SDL.h>
 #include <glm/glm.hpp>
@@ -40,6 +42,20 @@ inline color4_t ColorConvert(const color_t& color)
 
 	return color4;
 
+}
+
+inline color3_t HSVtoRGB(const glm::vec3& hsv) {
+	return glm::rgbColor(hsv);
+}
+
+inline color3_t HSVtoRGB(float hue, float saturation, float value) {
+	return glm::rgbColor(glm::vec3(hue, saturation, value));
+}
+
+inline float LinearToGAmma(float linear) {
+	if (linear > 0) return std::sqrt(linear);
+
+	return 0;
 }
 
 enum class BlendMode

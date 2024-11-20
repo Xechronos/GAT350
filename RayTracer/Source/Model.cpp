@@ -1,17 +1,30 @@
 #include "Model.h"
 #include "Framebuffer.h"
 #include "Camera.h"
+#include "Triangle.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
-/// <summary>
-/// Convert point from model space to world space
-/// </summary>
-/// <param name="framebuffer">The buffer we are drawing to</param>
-/// <param name="model">the model matrix that holds the points in model space</param>
-void Model::Draw(Framebuffer& framebuffer, const glm::mat4& model, const Camera& camera)
+#include "Sphere.h"
+void Model::Update()
 {
-	
+	for (size_t i = 0; i < m_local_verticies.size(); i++) {
+		m_verticies[i] = m_transform * glm::vec4{ m_local_verticies[i], 1};
+	}
+
+	m_center = glm::vec3{ 0 };
+	for (auto& vertex : m_verticies)
+	{
+		m_center + vertex;
+	}
+	m_center /= (float)m_verticies.size();
+
+	m_radius = 0;
+	for (auto& vertex : m_verticies)
+	{
+		float radius = glm::length(vertex - m_center);
+		m_radius = glm::max(radius, m_radius); 
+	}
 }
 
 bool Model::Load(const std::string& filename)
@@ -54,11 +67,43 @@ bool Model::Load(const std::string& filename)
 				}
 				if (index[0] != 0) {
 					glm::vec3 position = vertices[index[0] - 1];
-					m_verticies.push_back(position);
+					m_local_verticies.push_back(position);
 				}
 			}
 		}
 	}
+	m_verticies.resize(m_local_verticies.size());
 	stream.close();
 	return true;
+}
+
+bool Model::Hit(const ray_t& ray, raycastHit_t& raycastHit, float minDistance, float maxDistance)
+{
+		float t;
+
+	if (!Sphere::Raycast(ray, m_center, m_radius, minDistance,maxDistance, t)) {
+
+		// set raycast hit
+		raycastHit.distance = t;
+		raycastHit.point = ray.at(t);
+		raycastHit.normal = glm::vec3{ 0,1,0 };
+		raycastHit.material = GetMaterial();
+
+		return true;
+	}
+
+	for (size_t i = 0; i < m_local_verticies.size(); i+= 3) {
+		if (Triangle::Raycast(ray, m_verticies[i + 0], m_verticies[i + 1], m_verticies[i + 2], minDistance, maxDistance, t)) {
+			// set raycast hit
+			raycastHit.distance = t;
+			raycastHit.point = ray.at(t);
+			glm::vec3 edge1 = m_verticies[i + 1] - m_verticies[i];
+			glm::vec3 edge2 = m_verticies[i + 2] - m_verticies[i];
+			raycastHit.normal = glm::normalize(Cross(edge1, edge2));
+			raycastHit.material = GetMaterial();
+
+			return true;
+		}
+	}
+	return false;
 }
